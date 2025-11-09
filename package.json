@@ -1,0 +1,14 @@
+{
+  "name": "CHAT-APP",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build":"pnpm add --prefix backend && pnpm run build --prefix frontend",
+    "start": "pnpm run start --prefix backend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.7.0"
+}
