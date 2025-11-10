@@ -6,10 +6,13 @@ import User from "../models/user.model.js"
 
 const app = express()
 const server = http.createServer(app)
-
 const io = new Server(server, {
     cors: {
-        origin: ["http://localhost:5173"]
+        origin: [
+            "http://localhost:5173", // Développement
+            process.env.CLIENT_URL,  // URL de production
+        ].filter(Boolean),
+        credentials: true
     }
 })
 
@@ -43,7 +46,6 @@ io.on("connection", (socket) => {
     })
 })
 
-// Fonction utilitaire pour mettre à jour lastSeen et nettoyer
 async function updateLastSeenAndCleanup(userId, socketId) {
     try {
         if (userId) {
@@ -53,8 +55,7 @@ async function updateLastSeenAndCleanup(userId, socketId) {
                 await user.save()
                 console.log('LastSeen updated for user:', userId)
             }
-            
-            // Nettoyer la map
+
             if (userSocketMap[userId] === socketId) {
                 delete userSocketMap[userId]
             }
@@ -62,8 +63,7 @@ async function updateLastSeenAndCleanup(userId, socketId) {
     } catch (error) {
         console.error('Error updating lastSeen on disconnect:', error)
     }
-    
-    // Notifier tous les clients de la mise à jour
+
     io.emit("getOnlineUsers", Object.keys(userSocketMap))
 }
 
