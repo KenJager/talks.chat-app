@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
+import { MessageSquare } from 'lucide-react'
 import { useAuthStore } from '@stores/useAuthStore'
 import NavBar from '@components/NavBar'
 import HomePage from '@pages/HomePage'
@@ -24,7 +25,11 @@ function App() {
   }, [checkAuth])
 
   if (isCheckingAuth && !authUser) {
-    return <div className="flex justify-center items-center h-screen">
+    return <div className="flex flex-col justify-center items-center h-screen">
+      <div className='w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center'>
+        <MessageSquare className='w-7 h-7 text-primary' />
+      </div>
+      <h1>Welcome to Talk's</h1>
       <span className="loading loading-spinner"></span>
     </div>
   }

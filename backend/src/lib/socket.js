@@ -9,11 +9,13 @@ const server = http.createServer(app)
 const io = new Server(server, {
     cors: {
         origin: [
-            "http://localhost:5173", // Développement
             process.env.CLIENT_URL,  // URL de production
-        ].filter(Boolean),
-        credentials: true
-    }
+            "http://localhost:5173", // Développement
+        ],
+        credentials: true,
+        methods: ["GET", "POST"]
+    },
+    transports: ['websocket', 'polling']
 })
 
 export function getReceiverSocketId(userId) {
