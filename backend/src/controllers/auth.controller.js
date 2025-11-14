@@ -67,9 +67,10 @@ export const login = async (req, res) => {
         const code = generate2FACode()
         user.temp2FACode = code
         user.temp2FAExpires = new Date(Date.now() + 10 * 60 * 1000) // 10 minutes
-
+        
         await user.save()
         await send2FACode(email, code)
+        console.log("code  :", code)
 
         res.status(200).json({
             message: "2FA code sent to your email",

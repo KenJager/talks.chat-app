@@ -12,10 +12,10 @@ const io = new Server(server, {
             process.env.CLIENT_URL,  // URL de production
             "http://localhost:5173", // Développement
         ],
-        credentials: true,
-        methods: ["GET", "POST"]
+        // credentials: true,
+        // methods: ["GET", "POST"]
     },
-    transports: ['websocket', 'polling']
+    // transports: ['websocket', 'polling']
 })
 
 export function getReceiverSocketId(userId) {

@@ -1,29 +1,22 @@
 import nodemailer from 'nodemailer'
 
+const transporter = nodemailer.createTransport({
+  service: process.env.EMAIL_SERVICE, // ou votre service d'email
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+})
+
 // const transporter = nodemailer.createTransport({
-//   service: 'gmail', // ou votre service d'email
+//   host: process.env.EMAIL_SERVICE,
+//   port: process.env.EMAIL_PORT,
+//   secure: false, // Use TLS
 //   auth: {
 //     user: process.env.EMAIL_USER,
 //     pass: process.env.EMAIL_PASS
 //   }
 // })
-
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: process.env.EMAIL_PORT,
-  secure: false, // Use TLS
-  requireTLS: true,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  },
-  tls: {
-    rejectUnauthorized: false // Only for development
-  },
-  connectionTimeout: 10000, // 10 seconds
-  greetingTimeout: 10000,
-  socketTimeout: 10000
-})
 
 export const send2FACode = async (email, code) => {
   const mailOptions = {
