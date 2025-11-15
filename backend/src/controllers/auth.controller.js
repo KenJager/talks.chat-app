@@ -60,22 +60,18 @@ export const login = async (req, res) => {
         const user = await User.findOne({ email })
         if (user) {
             const isPasswordValid = await bcrypt.compare(password, user.password)
-            if (!isPasswordValid) return res.status(400).json({ message: "Invalid email or password" })
+            if (!isPasswordValid) return res.status(400).json({ message: "Invalid credentials" })
         } else { return res.status(400).json({ message: "Invalid credentials" }) }
-
-        // Générer et envoyer le code 2FA
-        const code = generate2FACode()
-        user.temp2FACode = code
-        user.temp2FAExpires = new Date(Date.now() + 10 * 60 * 1000) // 10 minutes
         
         await user.save()
-        await send2FACode(email, code)
-        console.log("code  :", code)
+        generateToken(user._id, res)
 
         res.status(200).json({
-            message: "2FA code sent to your email",
-            requires2FA: true,
-            tempUserId: user._id // ID temporaire pour la vérification
+            _id: user._id,
+            fullName: user.fullName,
+            email: user.email,
+            profilePicture: user.profilePicture,
+            lastSeen: user.lastSeen
         })
 
     } catch (error) {
@@ -98,7 +94,7 @@ export const logout = async (req, res) => {
         res.cookie("jwt", "", {
             maxAge: 0,
             httpOnly: true,
-            sameSite: 'strict',
+            sameSite: 'lax',
             secure: process.env.NODE_ENV !== 'development'
         })
 
@@ -150,43 +146,6 @@ export const checkAuth = async (req, res) => {
         })
     } catch (error) {
         console.error("Error during auth check:", error)
-        res.status(500).json({ message: "Internal server error" })
-    }
-}
-
-export const verify2FA = async (req, res) => {
-    const { tempUserId, code } = req.body
-
-    try {
-        const user = await User.findById(tempUserId)
-        if (!user) {
-            return res.status(400).json({ message: "Invalid verification session" })
-        }
-
-        if (!verify2FACode(user, code)) {
-            return res.status(400).json({ message: "Invalid or expired code" })
-        }
-
-        // Code valide - connexion réussie
-        user.temp2FACode = undefined
-        user.temp2FAExpires = undefined
-        await user.save()
-
-        // generate jwt token here
-        generateToken(user._id, res)
-        user.lastSeen = new Date();
-        await user.save();
-
-        res.status(200).json({
-            _id: user._id,
-            fullName: user.fullName,
-            email: user.email,
-            profilePicture: user.profilePicture,
-            lastSeen: user.lastSeen
-        })
-
-    } catch (error) {
-        console.error("Error during 2FA verification:", error)
         res.status(500).json({ message: "Internal server error" })
     }
 }

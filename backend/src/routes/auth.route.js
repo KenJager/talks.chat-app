@@ -5,8 +5,6 @@ import {
     updateProfile,
     checkAuth,
     logout,
-    verify2FA,
-    resend2FACode,
     forgotPassword,
     resetPassword,
     validateResetToken,
@@ -22,8 +20,6 @@ router.post('/verify-signup-2fa', verifySignup2FA)
 router.post('/resend-signup-code', resendSignupCode)
 
 router.post("/login", login)
-router.post('/verify-2fa', verify2FA)
-router.post('/resend-2fa-code', resend2FACode)
 
 router.post('/forgot-password', forgotPassword)
 router.get('/validate-reset-token/:token', validateResetToken)

@@ -27,21 +27,10 @@ const LoginPage = () => {
     const success = validateForm()
     if (success === true) {
       try {
-        const result = await login(formData)
-        console.log(result.tempUserId)
-
-        // Si la 2FA est requise, rediriger vers la page de vérification
-        if (result?.requires2FA) {
-          navigate('/verify-2fa', {
-            state: {
-              type: "login",
-              tempUserId: result.tempUserId,
-              email: formData.email
-            }
-          })
-        }
+        await login(formData)
+        navigate('/')
       } catch (error) {
-        console.error("Error during login : ",error)
+        console.error("Login error:", error)
       }
     }
   }

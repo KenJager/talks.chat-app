@@ -3,9 +3,9 @@ import axiosInstance from "@lib/axios"
 import { toast } from "react-hot-toast"
 import { io } from "socket.io-client"
 
-const BASE_URL = import.meta.env.MODE === "development" 
-                ? "http://localhost:5001" 
-                : import.meta.env.VITE_API_URL
+const BASE_URL = import.meta.env.MODE === "development"
+    ? "http://localhost:5001"
+    : import.meta.env.VITE_API_URL
 
 export const useAuthStore = create((set, get) => ({
     authUser: null,
@@ -60,20 +60,10 @@ export const useAuthStore = create((set, get) => ({
         set({ isLoggin: true })
         try {
             const res = await axiosInstance.post("/auth/login", data)
-
-            if (res.data.requires2FA) {
-                // Retourner les données pour la redirection
-                return {
-                    requires2FA: true,
-                    tempUserId: res.data.tempUserId,
-                    email: data.email
-                }
-            } else {
-                set({ authUser: res.data })
-                toast.success("Login successfully")
-                get().connectSocket()
-                return res.data
-            }
+            set({ authUser: res.data })
+            toast.success("Login successful")
+            get().connectSocket()
+            return res.data
         } catch (error) {
             toast.error(error.response?.data?.message || "Login failed")
             throw error
