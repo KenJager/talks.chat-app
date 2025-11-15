@@ -47,9 +47,9 @@ export const formatLastSeen = (lastSeenDate) => {
   const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
   const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
 
-  if (diffInMinutes < 1) {
-    return "En ligne il y a 3 secondes";
-  } else if (diffInMinutes < 60) {
+  if (diffInMinutes < 10) {
+    return "En ligne";
+  } else if (diffInMinutes > 10 && diffInMinutes < 60) {
     return `En ligne il y a ${diffInMinutes} min`;
   } else if (diffInHours < 24) {
     return `En ligne il y a ${diffInHours} h`;
