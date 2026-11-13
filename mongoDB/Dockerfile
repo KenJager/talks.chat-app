@@ -1,5 +1,5 @@
 # Dockerfile
-FROM mongo:latest
+FROM mongo:8.3
 
 # Ajouter un script d'initialisation
 RUN echo '#!/bin/bash\n\
