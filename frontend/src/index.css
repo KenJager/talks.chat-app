@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@plugin "daisyui";
+@plugin "daisyui" {
+    themes: all;
+}
+
+/* Dans ton fichier global.css */
+.message-input-container {
+  background-color: #f0f2f5;
+  border-radius: 20px;
+  padding: 8px 16px;
+}
+
+.dark .message-input-container {
+  background-color: #2a2a2a;
+}
+
+/* Animation d'envoi */
+@keyframes sendPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.send-button:active {
+  animation: sendPulse 0.2s ease;
+}
