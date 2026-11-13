@@ -36,14 +36,16 @@ export const sendFriendRequest = async (req, res) => {
             return res.status(400).json({ message: "Users are already friends" });
         }
 
-        // Vérifier s'il y a déjà une demande (peu importe le statut)
+        // Vérifier s'il y a déjà une demande, dans n'importe quel sens
         const existingRequest = await FriendRequest.findOne({
-            senderId,
-            receiverId
+            $or: [
+                { senderId, receiverId },
+                { senderId: receiverId, receiverId: senderId }
+            ]
         });
 
         if (existingRequest && existingRequest.status === "pending") {
-            return res.status(400).json({ message: "Friend request already exists" });
+            return res.status(409).json({ message: "Friend request already exists" });
         }
 
         // Si une demande existe mais est déclinée/acceptée, la réinitialiser à pending
@@ -56,11 +58,18 @@ export const sendFriendRequest = async (req, res) => {
             );
         } else {
             // Créer une nouvelle demande d'ami
-            friendRequest = new FriendRequest({
-                senderId,
-                receiverId
-            });
-            await friendRequest.save();
+            try {
+                friendRequest = new FriendRequest({
+                    senderId,
+                    receiverId
+                });
+                await friendRequest.save();
+            } catch (saveError) {
+                if (saveError?.code === 11000) {
+                    return res.status(409).json({ message: "Friend request already exists" });
+                }
+                throw saveError;
+            }
         }
 
         // Populate les détails du sender pour l'événement socket

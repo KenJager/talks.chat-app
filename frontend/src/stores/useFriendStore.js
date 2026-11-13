@@ -8,6 +8,7 @@ export const useFriendStore = create((set, get) => ({
     friendRequests: [],
     sentRequests: [],
     isLoading: false,
+    sendingRequestIds: {},
 
     // Obtenir la liste des amis
     getFriends: async () => {
@@ -44,14 +45,52 @@ export const useFriendStore = create((set, get) => ({
 
     // Envoyer une demande d'ami
     sendFriendRequest: async (receiverId) => {
+        const normalizedReceiverId = String(receiverId);
+        const alreadySent = get().sentRequests.some(request => String(request.receiverId?._id ?? request.receiverId) === normalizedReceiverId);
+        const alreadyReceived = get().friendRequests.some(request => String(request.senderId?._id ?? request.senderId) === normalizedReceiverId);
+
+        if (get().sendingRequestIds[normalizedReceiverId] || alreadySent || alreadyReceived) {
+            if (!alreadySent && !alreadyReceived) {
+                return;
+            }
+            toast.error("Friend request already exists");
+            return;
+        }
+
+        set(state => ({
+            sendingRequestIds: {
+                ...state.sendingRequestIds,
+                [normalizedReceiverId]: true
+            }
+        }));
+
         try {
             const res = await axiosInstance.post("/friends/request", { receiverId });
             toast.success("Friend request sent!");
             // Ajouter à la liste des demandes envoyées
             const sentRequests = get().sentRequests;
-            set({ sentRequests: [...sentRequests, res.data.friendRequest] });
+            set({
+                sentRequests: [...sentRequests, res.data.friendRequest],
+                sendingRequestIds: {
+                    ...get().sendingRequestIds,
+                    [normalizedReceiverId]: false
+                }
+            });
         } catch (error) {
-            toast.error(error.response?.data?.message || "Error sending friend request");
+            const message = error.response?.data?.message || "Error sending friend request";
+            set({
+                sendingRequestIds: {
+                    ...get().sendingRequestIds,
+                    [normalizedReceiverId]: false
+                }
+            });
+
+            if (error.response?.status === 409 || /already exists|already/i.test(message)) {
+                toast.error("Friend request already exists");
+                return;
+            }
+
+            toast.error(message);
         }
     },
 

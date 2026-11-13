@@ -1,7 +1,6 @@
 // AddContactModal.jsx
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { UserPlus2, UserCheck, Clock, Search, X } from 'lucide-react'
-import toast from 'react-hot-toast'
 import { useFriendStore } from '@stores/useFriendStore'
 import defaultProfile from '@components/default.png'
 
@@ -55,7 +54,6 @@ const AddContactModal = ({ allUsers = [], modalLoading = false, onRefreshUsers }
 
   const handleSendRequest = async (userId) => {
     await sendFriendRequest(userId)
-    toast.success('Friend request sent!')
     if (onRefreshUsers) {
       await onRefreshUsers()
     }

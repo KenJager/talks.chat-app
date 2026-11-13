@@ -1,3 +1,33 @@
+node_modules/
+uploads/
+*.log
+logs/
+.dist/
+/dist/
+/dist-ssr/
+*.local
+
+# Exclude environment files and secrets
+.env
+frontend/.env
+backend/.env
+
+# Exclude editor and system files
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Exclude git metadata
+.git/
+
+# Exclude Docker build cache and temp
+docker-compose.override.yml
+
 # Logs
 logs
 *.log
@@ -7,21 +37,9 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
 dist
 dist-ssr
 *.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
 
 # Local uploaded files
 backend/uploads/

@@ -44,12 +44,10 @@ const NavBar = () => {
       className='bg-base-100 border-b border-base-300 fixed w-full top-0 z-40 
       backdrop-blur-lg bg-base-100-100/80'
     >
-      <div className='container mx-auto px-4 h-12 md:h-16'>
+      <div className='container mx-auto px-4 py-4 h-12 md:h-16'>
         <div className='flex items-center justify-between h-full'>
           <Link to="/" className='flex items-center gap-2.5 hover:opacity-80 transition-all'>
-            <div className='w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center'>
-              <MessageSquare className='w-5 h-5 text-primary' />
-            </div>
+            <img src="/logo-talk.png" className="w-11 h-11" alt="" />
             <h1 className='text-lg font-bold'>Talk<span className='text-primary/100'>'</span>s</h1>
           </Link>
 

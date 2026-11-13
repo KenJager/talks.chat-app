@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import toast from 'react-hot-toast'
 import { MessageSquare, Mail, Lock, Eye, EyeOff } from 'lucide-react'
 
 import { useAuthStore } from '@stores/useAuthStore'
@@ -43,12 +44,7 @@ const LoginPage = () => {
           {/* LOGO */}
           <div className='text-center md-8'>
             <div className='flex flex-col items-center gap-2 group'>
-              <div
-                className='size-12 rounded bg-primary/10 flex items-center justify-center
-                group-hover:bg-primary/20 transition-colors animate-bounce'
-              >
-                <MessageSquare className='size-6 text-primary' />
-              </div>
+                <img src="/logo-talk.png" className="w-16 h-16 animate-bounce" alt="" />
               <h1 className='text-2xl font-bold mt-2'>Login</h1>
               <p className='text-base-content/60'>Connect to your account</p>
             </div>
